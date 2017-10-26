@@ -1,17 +1,14 @@
 package br.com.caelum.jms;
 
-import java.io.Serializable;
 import java.util.Scanner;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.naming.InitialContext;
 
@@ -51,6 +48,10 @@ public class TesteConsumidorTopicoEstoqueSelector {
 			}
 			
 		});
+		
+		// DLQ - tbm chamada de mensagem venenosa
+		// DLQ - Dead Letter Queue - É o nome da fila que as msgs nao lidas sao enviadas (por erro msm)
+		// ActiveMQ tenta ler a mensagem 6 vezes
 		
 				
 		new Scanner(System.in).nextLine();

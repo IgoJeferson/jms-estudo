@@ -5,15 +5,13 @@ import java.util.Scanner;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
-import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.naming.InitialContext;
 
-public class TesteConsumidorFila {
+public class TesteConsumidorDLQ {
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) throws Exception {
@@ -23,29 +21,16 @@ public class TesteConsumidorFila {
 		
 		Connection connection = factory.createConnection(); 
 		connection.start();
-		Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
+		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		
-		Destination fila = (Destination) context.lookup("financeiro");
+		Destination fila = (Destination) context.lookup("DLQ");
 		MessageConsumer consumer = session.createConsumer(fila );
 		
 		consumer.setMessageListener(new MessageListener() {
 
 			@Override
 			public void onMessage(Message message) {
-
-				TextMessage textMessage = (TextMessage)message;
-				
-				try {
-					System.out.println(textMessage.getText());
-					session.commit();
-				} catch (JMSException e) {
-					e.printStackTrace();
-					try {
-						session.rollback();
-					} catch (JMSException e1) {
-						e1.printStackTrace();
-					}
-				}
+				System.out.println(message);
 			}
 			
 		});
